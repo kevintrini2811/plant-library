@@ -21,7 +21,7 @@ internal static class MenuPresentation {
             // The native menu owns icon placement and its border. The sprite
             // contains Peashooter and lawn; no UI is added behind the text.
             ModMenuService.CreateEntry(mod).AddIcon(icon)
-                .AddDescription("Standardisierte Pflanzen, Projektile, Effekte und Mod-Almanach.").Register();
+                .AddDescription("Standardized plants, projectiles, effects, and a mod almanac.").Register();
         } catch {
             if (icon != null) { Object.Destroy(icon); icon = null; }
             Object.Destroy(texture); throw;

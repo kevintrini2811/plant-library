@@ -1,59 +1,66 @@
 # Plant Library 1.0.2
 
-Gemeinsame MelonLoader-Bibliothek für PvZ Replanted. Gemeinsame native UI- und Lokalisierungshelfer werden als Quellcode aus `../shared/` eingebunden. Die Bibliothek benötigt das vorhandene BloomEngine für ihren Eintrag im Mod-Menü. Native Datenmodelle, Saatbank, Schriftarten, Buttons und Navigation bleiben in Verwendung. Der Menüeintrag zeigt den freigestellten nativen Peashooter auf kräftigem Tagesrasen ausschließlich innerhalb des Icons. Position und Rahmen stammen vom nativen Mod-Menü; hinter dem Beschreibungstext wird kein eigenes UI angelegt.
+## Dependencies
 
-## Korrektur 1.0.2
+- Game/runtime: PvZ Replanted (Windows/IL2CPP), MelonLoader 0.7.3, and .NET 6.
+- Required mods: `BloomEngine.dll`.
+- Optional integrations: `DebugMod`.
+- Building: .NET SDK with `net6.0` support and the game/MelonLoader reference assemblies declared in `PlantLibrary.csproj`.
 
-Das Menü-Icon verwendet `SPR_Preview_PeaShooter` mit originalem Alphakanal statt eines Samenpäckchens. Der native Tagesrasen wird ohne blasse Aufhellung und mit voller Deckkraft in das quadratische Icon eingebunden. Die bisherige zusätzliche Rasenfläche hinter dem Text und der dafür erforderliche UI-Scan entfallen. `tools/export_menu_assets.py` erzeugt die eingebettete Grafik aus nativen Assets; `assets/sources.json` dokumentiert Sprite-IDs und Prüfsummen.
+Shared MelonLoader library for PvZ Replanted. Common native UI and localization helpers are included as source code from `../shared/`. The library requires the existing BloomEngine for its entry in the mod menu. Native data models, seed bank, fonts, buttons and navigation remain in use. The menu entry shows the isolated native peashooter on strong day lawn exclusively within the icon. Position and frame are from the native mod menu; No separate UI is created behind the description text.
 
-## Korrektur 1.0.1
+## Fix 1.0.2
 
-Die Pflanzenkarten im Mod-Almanach verwenden jetzt die vorhandene native Kartenbasis mit Rahmen, Papier und „Bloom & Doom“-Kopf. Freigestellte Mod-Porträts werden innerhalb der Kartenfläche dargestellt. Native vollständige Miniaturen bleiben unverändert und erhalten keinen zweiten Rahmen. Die native Auswahlmaske liegt über der vollständigen Karte; Namen stehen wie bei nativen Pflanzen in der Detailansicht. Das Raster übernimmt auch Padding und Ausrichtung des nativen Layouts. Kartenbasis und Quellbezug stehen unter `assets/packet-background.png` und `assets/packet-background-source.json`.
+The menu icon uses `SPR_Preview_PeaShooter` with original alpha channel instead of a seed packet. The native day lawn is integrated into the square icon without any pale brightening and with full opacity. The previous additional grass area behind the text and the UI scan required for it are no longer necessary. `tools/export_menu_assets.py` creates the embedded graphics from native assets; `assets/sources.json` documents sprite IDs and checksums.
 
-Spiel und Testprogramme werden nicht gestartet. Kompilierung und Dateiansichten ersetzen die manuelle Prüfung der Karten im Spiel nicht.
+## Fix 1.0.1
 
-## Öffentliche API
+The plant cards in the Mod Almanac now use the existing native card base with frame, paper and Bloom & Doom header. Isolated mod portraits are displayed within the card area. Native full thumbnails remain unchanged and do not receive a second frame. The native selection mask overlays the full map; As with native plants, names are in the detailed view. The grid also handles padding and alignment from the native layout. Map base and source reference are under `assets/packet-background.png` and `assets/packet-background-source.json`.
 
-- `Plants.RegisterPlant(mod, id, entry, cost, unlockPolicy)` registriert eine Pflanze. `PlantIdentity` besteht aus einem vorhandenen nativen `SeedType` und einem gespeicherten Variantenmarker. Doppelte Variantenpaare und IDs werden abgelehnt. IDs nach Veröffentlichung nicht ändern.
-- `Plants.RegisterCatalog(mod)` veröffentlicht den Mod-Katalog. Die Bibliothek erzeugt automatisch einen eigenen Almanach-Tab mit übersetzten Texten, Porträts, Seitennavigation und Controller-Navigation. Jede Mod liefert ihre eigenen Ressourcen über `ModCatalog.Resource`.
-- `PlantDefinition.Initialize`, `Tick` und `ProjectileCreated` ergänzen native Initialisierung, Fähigkeitsticks und aus `Plant.Fire` erzeugte Projektile. `CanPlant` ergänzt die Terrainprüfung. Die Bibliothek verändert nicht automatisch Schaden oder Verhalten von Projektilen. Eigene Controller und Grafiken bleiben Aufgabe der jeweiligen Mod.
-- `Projectiles.RegisterProjectile` registriert eine eindeutige Projektilkennung, eine Erkennungsfunktion sowie optionale Geburt-, Aufpralleffekt- und Sound-Zuordnungen. Kennungen müssen nach Speichern/Laden aus serialisierten Feldern erkennbar sein. Skriptgesteuerte Erzeuger rufen nach Setzen ihrer Kennung `Projectiles.NotifyBorn` auf. Native Schüsse registrierter Pflanzen werden automatisch zugeordnet.
-- `Projectiles.RegisterImpactEffect` registriert einen visuellen Aufpralleffekt. `ProjectileImpact` enthält Position, Board und Zeichenreihenfolge vor der Kollision; nach Schadens- oder Todescallbacks wird kein möglicherweise wiederverwendetes Projektil gelesen. `EmitImpactEffect` erlaubt denselben Effekt aus einer eigenen, bereits vorhandenen Kollisionsroutine.
-- `Projectiles.RegisterSound` und `PlaySound` registrieren und spielen Sounds. Native Foley-Sounds können direkt in den Callback eingebunden werden. Andere Soundquellen sind ebenfalls möglich; deren Laden und Freigabe übernimmt die Mod.
+Game and test programs will not start. Compilation and file views do not replace manual review of in-game maps.
 
-Effekte und Sounds müssen vor ihrer Projektildefinition registriert werden. Pflanzen müssen vor `RegisterCatalog` registriert werden. Verwende für Ressourcenkennungen den Mod-Präfix, beispielsweise `example:pea`. Die erste passende Projektildefinition besitzt den Effekt; Erkennungsfunktionen dürfen sich deshalb nicht überlappen. `ImpactOnlyWhenOriginalSkipped` verhindert doppelte Sounds, wenn eine vorhandene Kollisionsroutine den nativen Aufprall ersetzt.
+## Public API
 
-`Initialize` gilt für neue Pflanzen, nicht für das Laden gespeicherter Pflanzen. Laufender Zustand gehört in kompatible, belegte Speicherfelder. `Tick` folgt den nativen Simulationsticks. Die Bibliothek bietet keine neue Speicherstruktur innerhalb nativer Spielstände und keine synthetischen Enum-Werte.
+- `Plants.RegisterPlant(mod, id, entry, cost, unlockPolicy)` registers a plant. `PlantIdentity` consists of an existing native `SeedType` and a saved variant marker. Duplicate variant pairs and IDs are rejected. Do not change IDs after publishing.
+- `Plants.RegisterCatalog(mod)` publishes the mod catalog. The library automatically creates its own almanac tab with translated text, portraits, page navigation and controller navigation. Each mod provides its own resources via `ModCatalog.Resource`.
+- `PlantDefinition.Initialize`, `Tick` and `ProjectileCreated` add native initialization, ability ticks and projectiles generated from `Plant.Fire`. `CanPlant` complements the terrain test. The library does not automatically change projectile damage or behavior. Own controllers and graphics remain the responsibility of the respective mod.
+- `Projectiles.RegisterProjectile` registers a unique projectile identifier, a detection function and optional birth, impact effect and sound mappings. Identifiers must be recognizable from serialized fields after save/load. Script-controlled producers call `Projectiles.NotifyBorn` after setting their identifier. Native shots of registered plants are assigned automatically.
+- `Projectiles.RegisterImpactEffect` registers a visual impact effect. `ProjectileImpact` contains position, board and character order before collision; no potentially reused projectile is read after damage or death callbacks. `EmitImpactEffect` allows the same effect from its own existing collision routine.
+- `Projectiles.RegisterSound` and `PlaySound` register and play sounds. Native Foley sounds can be integrated directly into the callback. Other sound sources are also possible; The mod takes care of loading and releasing them.
 
-## Freischaltungen und Pflanzenauswahl
+Effects and sounds must be registered before their projectile definition. Plants must be registered before `RegisterCatalog`. For resource identifiers, use the mod prefix, for example `example:pea`. The first matching projectile definition has the effect; Recognition functions must therefore not overlap. `ImpactOnlyWhenOriginalSkipped` prevents duplicate sounds when an existing collision routine replaces the native collision.
 
-`UnlockPolicy.Always` stellt eine Variante regulär bereit. `Never` hält sie außerhalb der normalen Auswahl. `Explicit` erlaubt `Plants.Unlock(definition, board)` für das aktive Spielprofil. `IsUnlocked` fragt denselben Zustand ab. Normale Fortschrittsbelohnungen können Varianten nicht freischalten. Bibliotheksfortschritt liegt separat unter `UserData/PlantLibrary/unlocks.json`; native Profile und Spielstände bleiben unberührt. Beschädigte Fortschrittsdateien werden nicht überschrieben.
+`Initialize` applies to new plants, not to loading saved plants. Running state belongs in compatible, occupied memory fields. `Tick` follows the native simulation sticks. The library does not provide a new storage structure within native saves and does not provide synthetic enum values.
 
-Die normale Auswahl füllt zuerst freie Plätze ihrer ersten Seite. Erst bei Überlauf erscheinen native Seitenpfeile. Die Imitater-Auswahl bleibt auf ihre nativen Einträge begrenzt. Auswahl und Saatbank unterscheiden Varianten anhand der konkreten Kartenobjekte und der gespeicherten Marker. Die Bibliothek überträgt Varianten nach dem nativen Bestätigen erneut in die Saatbank, weil der native Abschluss nur die ursprünglichen 49 Karten besucht. Kosten, Sonnenabzug und Terrainprüfung bleiben verbindlich.
+## Unlocks and plant selection
 
-Die verfügbaren Varianten werden beim Aufbau einer Auswahl aufgenommen. Nach einer neuen Freischaltung die Auswahl erneut öffnen. `Plants.ExternalChooser` erlaubt einer Mod mit eigener vollständiger Auswahl, für ihre Boards die reguläre Bibliotheksauswahl auszusetzen. Plant Fusion nutzt dies ausschließlich für ihren Debug-Level.
+`UnlockPolicy.Always` provides a variant regularly. `Never` keeps them outside the normal selection. `Explicit` allows `Plants.Unlock(definition, board)` for the active game profile. `IsUnlocked` queries the same status. Normal progression rewards cannot unlock variants. Library progress is separately under `UserData/PlantLibrary/unlocks.json`; Native profiles and saves remain unaffected. Damaged progress files will not be overwritten.
 
-Plant Fusion registriert ihre Katalogpflanzen über diese API. Rezeptauflösung, Zutatenverbrauch, Fusionen, Schaden, besondere Terrainregeln und Fusion-Animationen bleiben in Plant Fusion. Vanilla-Pflanzen, die zugleich Fusionsergebnisse sind, behalten ihre normalen nativen Fortschrittsregeln; die Sperre betrifft zusätzliche Varianten. Die Blutsonnenblume wird ausschließlich am erfolgreichen Fusion-Abschluss freigeschaltet. Laden, Infektion und direktes Debug-Spawnen lösen keine Freischaltung aus.
+The normal selection first fills free spaces on its first page. Native page arrows only appear when there is an overflow. The impersonator selection remains limited to its native entries. Selection and seed bank distinguish variants based on the specific map objects and the saved markers. The library re-transmits variants into the seed bank after native confirmation because the native completion only visits the original 49 cards. Costs, sun deduction and terrain inspection remain binding.
 
-## Bauen und installieren
+The available variants are included when building a selection. After a new activation, open the selection again. `Plants.ExternalChooser` allows a mod with its own full selection to suspend the regular library selection for their boards. Plant Fusion uses this exclusively for their debug level.
+
+Plant Fusion registers their catalog plants via this API. Recipe resolution, ingredient consumption, fusions, damage, special terrain rules, and fusion animations remain in Plant Fusion. Vanilla plants that are also fusion results retain their normal native progression rules; the ban affects additional variants. The Blood Sunflower is only unlocked when the Fusion is successfully completed. Loading, infection and direct debug spawning do not trigger an unlock.
+
+## Building and installing
 
 ```sh
 rtk proxy /home/kevin/modding/pvzreplanted/.tools/dotnet/dotnet build /home/kevin/modding/pvzreplanted/plant-library/PlantLibrary.csproj -c Release
 rtk proxy python3 /home/kevin/modding/pvzreplanted/plant-library/tools/install.py
 ```
 
-Der Installer baut Fusion, Plant Library und Zombie Library gemeinsam, sichert vorhandene DLLs, prüft konkurrierende Änderungen und ersetzt sie atomar. Bei Fehlern während der DLL-Installation stellt er die bisherigen Dateien wieder her. Er startet weder Spiel noch Testprogramme. Prüfsummen und Installationsnachweis liegen unter `SHA256SUMS` und `backups/<Zeitstempel>/installation.json`.
+The installer builds Fusion, Plant Library and Zombie Library together, backs up existing DLLs, checks competing changes and replaces them atomically. If there are errors during the DLL installation, it restores the previous files. It doesn't start any games or test programs. Checksums and proof of installation are below `SHA256SUMS` and `backups/<Zeitstempel>/installation.json`.
 
-Die [Beispiel-Mod](example-mod/README.md) wird mit `--example` zusätzlich installiert. Sie ist standardmäßig nur Quellcode und gebautes Beispiel, damit die Demonstrationspflanze nicht ungefragt in regulären Partien erscheint.
+The [example Mod](example-mod/README.md) is also installed with `--example`. By default it is only source code and a built example, so that the demonstration plant does not appear in regular games without being asked.
 
-Für einen Rückbau zuerst das Spiel schließen. Die im Installationsnachweis aufgeführten alten DLLs aus dem Backup wieder nach `Mods/` kopieren. Dateien, deren vorheriger Hash `null` ist, waren vorher nicht installiert und können entfernt werden. Fusion, Plant Library und Zombie Library immer gemeinsam zurückbauen. Eine Bibliothek nicht entfernen, während eine abhängige Mod installiert bleibt.
+To restore, first close the game. Copy the old DLLs listed in the installation certificate from the backup back to `Mods/`. Files whose previous hash is `null` were not previously installed and can be removed. Always dismantle Fusion, Plant Library and Zombie Library together. Do not remove a library while leaving a dependent mod installed.
 
-## Belege und offene Laufzeitprüfung
+## Documents and open term check
 
-Builds verwenden die tatsächlich installierten IL2CPP-Referenzen. Der Tagesrasen stammt aus `backgroundatlases_assets_all_19e402bc532d2cf4f6d062dcf0b108ec.bundle`, Sprite `Area1_Lawn`, Path ID `-5079667051938085663`. Der Menüausschnitt zeigt ausschließlich Rasen und wird auf 1450 × 600 Pixel begrenzt. `tools/export_menu_assets.py` und `assets/sources.json` dokumentieren Export und Prüfsummen. Der freigestellte Peashooter stammt aus dem nativen Sprite `SPR_Preview_PeaShooter`, Path ID `3333466314890536487`, im Bundle `defaultlocalgroup_assets_assets/art/characters/previews_f999564bc5382eb85495ec50c887a03d.bundle`. Grafiken werden nicht generiert oder aus dem Internet geladen.
+Builds use the actual installed IL2CPP references. The day lawn comes from `backgroundatlases_assets_all_19e402bc532d2cf4f6d062dcf0b108ec.bundle`, Sprite `Area1_Lawn`, Path ID `-5079667051938085663`. The menu section only shows lawns and is limited to 1450 × 600 pixels. `tools/export_menu_assets.py` and `assets/sources.json` document export and checksums. The released peashooter comes from the native sprite `SPR_Preview_PeaShooter`, path ID `3333466314890536487`, in the bundle `defaultlocalgroup_assets_assets/art/characters/previews_f999564bc5382eb85495ec50c887a03d.bundle`. Graphics are not generated or loaded from the Internet.
 
-Spiel und Testprogramme werden auf Benutzerwunsch nicht ausgeführt. Insbesondere zusätzliche Auswahlseiten, Controller-Navigation, Koop, Fortsetzen gespeicherter Partien, Soundhäufigkeit und Menügestaltung benötigen die manuelle Laufzeitprüfung. Dies ist keine Behauptung bereits bestandener Spieltests.
+Game and test programs are not executed at the user's request. In particular, additional selection pages, controller navigation, co-op, resuming saved games, sound frequency and menu design require manual runtime checking. This is not a claim to have already passed playtests.
 
 ## Debug-API
 
-Die optionale Debug Mod 1.1.0 kann registrierte Almanacheinträge abfragen und deren Sichtbarkeit für die laufende Sitzung überschreiben. Plant Library unterstützt zusätzlich sitzungsbezogene Overrides der Pflanzenauswahl. Ohne Debug Mod gelten unverändert die normalen Bibliotheksregeln. Anleitung: `../debug-mod/src/documentation.md`.
+The optional Debug Mod 1.1.0 can query registered almanac entries and override their visibility for the current session. Plant Library additionally supports session-related plant selection overrides. Without a debug mod, the normal library rules still apply. Instructions: `../debug-mod/src/documentation.md`.

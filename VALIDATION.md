@@ -1,15 +1,15 @@
-# Statischer Abschlussnachweis
+# Static proof of completion
 
-Plant Library 1.0.0 und Plant Fusion 19.0.0 wurden gemeinsam installiert. Release-Builds gegen die installierten IL2CPP-Referenzen und der Build von PlantLibraryExample endeten jeweils mit 0 Fehlern und 0 Warnungen. Die Beispiel-Mod ist gebaut, aber nicht installiert.
+Plant Library 1.0.0 and Plant Fusion 19.0.0 were installed together. Release builds against the installed IL2CPP references and the PlantLibraryExample build ended with 0 errors and 0 warnings, respectively. The example mod is built but not installed.
 
-Die generierten Fusion-Registrierungen stimmen mit dem Manifest überein. 296 Katalogeinträge besitzen eindeutige Katalogidentitäten. Projekt-XML und die geänderten Python-Werkzeuge sind syntaktisch gültig. Bestehende Offline-Testadapter wurden auf die neue Abhängigkeit angepasst, aber weder gebaut noch ausgeführt.
+The Fusion registrations generated match the manifest. 296 catalog entries have unique catalog identities. Project XML and the modified Python tools are syntactically valid. Existing offline test adapters were adapted to the new dependency, but were neither built nor executed.
 
-Native statische Belege: SeedChooserDataModel.UpdateEntries bei RVA 0x79E150 baut vollständige und freigeschaltete Modelle getrennt auf; die Bibliothek übernimmt daher gemeinsame Referenzen auf die vollständigen Modelle. SeedChooserScreen.PickedPlantType bei RVA 0x6D2700 untersucht die ursprünglichen 49 Pflanzenplätze. Native Auswahlregeln bleiben für diese Einträge erhalten. Die Bibliothek behandelt zusätzliche Karten und die Übernahme ihrer Varianten in die Saatbank separat.
+Native static evidence: SeedChooserDataModel.UpdateEntries at RVA 0x79E150 builds complete and unlocked models separately; the library therefore adopts common references to the complete models. SeedChooserScreen.PickedPlantType at RVA 0x6D2700 examines the original 49 plant slots. Native selection rules are retained for these entries. The library handles additional cards and the addition of their variants to the seed bank separately.
 
-Installierte DLL-Versionen wurden aus PE-Ressourcen gelesen. Installierte Dateien und Build-Ausgaben wurden bytegenau verglichen. SHA256SUMS bestätigt die installierten Dateien. Die Installation sichert vorherige DLLs unter:
+Installed DLL versions were read from PE resources. Installed files and build output were compared down to the last byte. SHA256SUMS confirms the installed files. The installation saves previous DLLs at:
 
 `/home/kevin/modding/pvzreplanted/plant-library/backups/20261103T052037.911616Z`
 
-Dort dokumentiert `installation.json` alte und neue Prüfsummen sowie die vorherige Existenz jeder DLL. Die bisherige FusionMod.dll ist gesichert; PlantLibrary.dll war zuvor nicht installiert.
+There, `installation.json` documents old and new checksums as well as the previous existence of each DLL. The previous FusionMod.dll is secured; PlantLibrary.dll was not previously installed.
 
-Spiel und Testprogramme wurden nicht gestartet. Zusätzliche Auswahlseiten, Controller-Navigation, Koop, Fortsetzen gespeicherter Partien, Blutsonnenblumen-Freischaltung, Soundhäufigkeit und Menügestaltung sind manuell im Spiel zu prüfen. Kompilierung und Dateiprüfungen belegen diese Laufzeiteigenschaften nicht.
+Game and test programs did not start. Additional selection pages, controller navigation, co-op, resuming saved games, Blood Sunflower unlock, sound frequency and menu design must be checked manually in the game. Compilation and file checks do not demonstrate these runtime properties.
