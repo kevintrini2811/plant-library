@@ -1,0 +1,10 @@
+{
+  "source": "/home/kevin/modding/pvzreplanted/fusion-mod/assets/debug-cards/packet-background.png",
+  "sha256": "1abe6ada954ebd4ab666558c7491855299e5b97e6c1c339a61e4f9b0696cc2ac",
+  "native_sources": [
+    "SPR_Almanac_Seedpackets_PeaShooter",
+    "SPR_Store_Item_SeedBackground"
+  ],
+  "generator": "fusion-mod/tools/build_debug_cards.py",
+  "usage": "Native frame/header and empty paper; portrait remains a separate native Image."
+}
